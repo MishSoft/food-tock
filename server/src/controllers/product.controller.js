@@ -1,5 +1,5 @@
 
-
+import prisma from "../config/db.js"
 export const getProducts = async (req, res, next) => {
   try {
     const products = await prisma.product.findMany()
