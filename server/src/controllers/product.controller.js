@@ -1,39 +1,15 @@
-const dummyProducts = [
-  {
-    id: "1",
-    name: "Fresh Green Salad",
-    category: "Salad",
-    price: 12.99,
-    description: "Delicious fresh organic vegetable salad.",
-    image: "/images/salad.jpg",
-  },
-  {
-    id: "2",
-    name: "Beef Burger Classic",
-    category: "Burger",
-    price: 15.5,
-    description: "Juicy beef patty with cheese, lettuce, and special sauce.",
-    image: "/images/burger.jpg",
-  },
-  {
-    id: "3",
-    name: "Italian Espresso",
-    category: "Coffee",
-    price: 4.0,
-    description: "Rich and aromatic rich espresso shot.",
-    image: "/images/espresso.jpg",
-  },
-];
+
 
 export const getProducts = async (req, res, next) => {
   try {
+    const products = await prisma.product.findMany()
     res.status(200).json({
       status: "success",
-      results: dummyProducts.length,
+      results: products.length,
       data: {
-        product: dummyProducts
-      }
-    })
+        products,
+      },
+    });
   } catch (error) {
     next(error)
   }
@@ -43,7 +19,9 @@ export const getProducts = async (req, res, next) => {
 export const getProductById = async (req, res, next) => {
   try {
     const {id} = req.params
-    const product = dummyProducts.find((p) => p.id === id)
+    const product = await prisma.product.findUnique({
+      where: {id}
+    })
 
 
     if (!product) {
